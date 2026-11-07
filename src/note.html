@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<title>Note</title>
+<style>
+  :root { --bg: #E8DDC4; --ink: #3B3733; --soft: rgba(59,55,51,.45); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--ink); overflow: hidden;
+    font-family: "Segoe UI", system-ui, sans-serif; user-select: none; }
+  body { display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,.07); }
+  .bar { height: 26px; flex: none; display: flex; align-items: center; gap: 2px; padding: 0 4px 0 8px;
+    -webkit-app-region: drag; background: rgba(0,0,0,.035); }
+  .bar .grow { flex: 1; }
+  button { -webkit-app-region: no-drag; border: 0; background: transparent; color: var(--soft);
+    width: 22px; height: 22px; border-radius: 4px; display: grid; place-items: center; cursor: pointer; }
+  button:hover { background: rgba(0,0,0,.07); color: var(--ink); }
+  button svg { width: 12px; height: 12px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; background: conic-gradient(#E8DDC4 0 60deg,#CBD5C0 0 120deg,#E4CBC5 0 180deg,#C6CFDA 0 240deg,#D5CDDC 0 300deg,#DAD6CE 0); border: 1px solid rgba(0,0,0,.25); }
+  .swatches { display: none; gap: 5px; -webkit-app-region: no-drag; }
+  .swatches.on { display: flex; }
+  .sw { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,.18); cursor: pointer; }
+  .sw.sel { outline: 1.5px solid var(--ink); outline-offset: 1px; }
+  .pin.off { opacity: .55; }
+  textarea { flex: 1; width: 100%; border: 0; outline: 0; resize: none; background: transparent; color: var(--ink);
+    padding: 8px 12px 12px; font: 14px/1.45 "Segoe UI", system-ui, sans-serif; user-select: text; }
+  textarea::placeholder { color: var(--soft); }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <button id="colorBtn" title="Colour"><span class="dot"></span></button>
+    <div class="swatches" id="swatches"></div>
+    <div class="grow"></div>
+    <button id="pinBtn" class="pin" title="Keep on top / send behind">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4.5 6.5 8 3l3.5 3.5"/><path d="M3 14h10"/></svg>
+    </button>
+    <button id="closeBtn" title="Close (kept in control centre)">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+    </button>
+  </div>
+  <textarea id="text" placeholder="Write a note" spellcheck="true"></textarea>
+<script src="note.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
+<title>Squeeze the Notes</title>
+<style>
+  :root { --bg: #F4F1EC; --card: #FBFAF7; --ink: #3B3733; --soft: #8A847C; --line: #E4DFD6; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font: 13px/1.4 "Segoe UI", system-ui, sans-serif;
+    height: 100vh; display: flex; flex-direction: column; }
+  header { padding: 18px 18px 12px; }
+  h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
+  .sub { color: var(--soft); font-size: 12px; margin-top: 2px; }
+  .newrow { display: flex; align-items: center; gap: 8px; padding: 0 18px 12px; }
+  .newrow span { color: var(--soft); font-size: 12px; margin-right: 2px; }
+  .new { width: 24px; height: 24px; border-radius: 5px; border: 1px solid rgba(0,0,0,.12); cursor: pointer;
+    display: grid; place-items: center; color: rgba(59,55,51,.55); font-size: 15px; line-height: 1; }
+  .new:hover { color: var(--ink); border-color: rgba(0,0,0,.3); }
+  .tools { display: flex; gap: 6px; padding: 0 18px 10px; border-bottom: 1px solid var(--line); }
+  .btn { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 5px;
+    padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+  .btn:hover { border-color: #CFC8BD; }
+  ul { list-style: none; flex: 1; overflow-y: auto; padding: 8px 12px; }
+  li { display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-radius: 6px; }
+  li:hover { background: var(--card); }
+  .chip { width: 14px; height: 14px; border-radius: 3px; flex: none; border: 1px solid rgba(0,0,0,.1); }
+  .txt { flex: 1; min-width: 0; cursor: pointer; }
+  .txt b { display: block; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .txt b.empty { color: var(--soft); font-style: italic; font-weight: 400; }
+  .txt small { color: var(--soft); font-size: 11px; }
+  .act { display: flex; gap: 2px; opacity: 0; }
+  li:hover .act { opacity: 1; }
+  .ic { border: 0; background: transparent; color: var(--soft); border-radius: 4px; padding: 3px 6px;
+    font: inherit; font-size: 11px; cursor: pointer; }
+  .ic:hover { background: var(--line); color: var(--ink); }
+  .ic.del:hover { color: #9A4B42; }
+  .hidden .chip { opacity: .45; }
+  .hidden .txt b { color: var(--soft); }
+  .emptylist { color: var(--soft); text-align: center; padding: 40px 0; }
+  footer { border-top: 1px solid var(--line); padding: 12px 18px; display: flex; align-items: center; gap: 8px; }
+  footer label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  input[type=checkbox] { accent-color: #6E7F68; width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Squeeze the Notes</h1>
+    <div class="sub" id="count"></div>
+  </header>
+  <div class="newrow" id="newrow"><span>New</span></div>
+  <div class="tools">
+    <button class="btn" id="showAll">Show all</button>
+    <button class="btn" id="hideAll">Hide all</button>
+  </div>
+  <ul id="list"></ul>
+  <footer>
+    <label><input type="checkbox" id="startup"> Show notes when PC starts</label>
+  </footer>
+<script src="centre.js"></script>
+</body>
+</html>
