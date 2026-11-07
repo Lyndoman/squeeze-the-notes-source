@@ -14,7 +14,7 @@ Format: version, date, then Added / Changed / Fixed / Removed.
 
 ### Tested
 - Linux, headless: typing a title saves it; Enter moves to the body; notes saved before 1.2.0 (no title field) load and list correctly; long titles truncate; earlier backup, recovery and export tests still pass.
-- Not tested: Windows.
+- Windows (Lyndon's PC, 7 Nov 2026): installed over 1.1.0; title added and shown in the control centre.
 
 ## [1.1.0] - 2026-11-07
 ### Added

@@ -7,7 +7,7 @@ A minimal sticky-note app for the Windows desktop. Owner: Lyndon Antcliff (novic
 Electron app, NSIS installer, Windows only. Shared with others as an unsigned installer.
 
 ## Current state
-- Version: 1.2.0 (see CHANGELOG.md). 1.1.0 passed all checks on Lyndon's Windows PC (7 Nov 2026); 1.2.0 not yet tested on Windows.
+- Version: 1.2.0 (see CHANGELOG.md). 1.1.0 passed all checks on Lyndon's Windows PC (7 Nov 2026); 1.2.0 tested on Windows (titles work).
 - Installers: ../Squeeze-the-Notes-Setup/ (keep old versions there; zip for sharing)
 - User data: %APPDATA%\Squeeze the Notes\notes.json, daily backups in backups\ (last 14)
 - Pushing to GitHub: Lyndon pushes with GitHub Desktop (repo Lyndoman/squeeze-the-notes-source, private). The shell on his PC has no GitHub login, so commit there and ask him to click Push.

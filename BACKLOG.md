@@ -6,7 +6,6 @@ Status: Next / Later / Maybe / Rejected
 ## Next
 | # | Item | Why | Effort | Status |
 |---|---|---|---|---|
-| - | Owner tests v1.2.0 on Windows | Type a title, check it shows in the control centre; old notes still listed | - | To do |
 | 11 | Restore from backup button | Restoring is manual today: quit the app, copy a file from backups over notes.json. Fine for the owner, hard for anyone it is shared with. | Low | Later, if needed |
 
 Shipped in 1.1.0: backup and export, off-screen rescue, global hotkey (see CHANGELOG.md).

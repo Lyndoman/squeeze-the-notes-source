@@ -36,7 +36,7 @@ If notes.json is ever damaged, the app does this automatically and keeps the dam
 
 - Unsigned: Windows SmartScreen warns on install ("More info" > "Run anyway").
 - About 81MB because of Electron.
-- 1.1.0 tested on Windows (7 Nov 2026). 1.2.0 not yet.
+- 1.1.0 tested on Windows (7 Nov 2026). 1.2.0 tested (titles).
 
 ## Shortcuts
 
