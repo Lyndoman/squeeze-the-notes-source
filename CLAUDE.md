@@ -21,6 +21,7 @@ Electron app, NSIS installer, Windows only. Shared with others as an unsigned in
 5. Keep all records in this folder, not only in chat. Chat sessions and cloud workspaces get wiped.
 6. Never break existing notes.json files. New fields must have defaults.
 7. Writing style for Lyndon: terse, direct, no em dashes, pushback welcome.
+8. Commits use the GitHub no-reply email (12440709+Lyndoman@users.noreply.github.com), set in this repo's git config. Never commit with the Gmail address. The first 5 commits show Gmail; accepted by Lyndon.
 
 ## How to build
 Needs Node.js. On Linux the Windows build also needs wine.
