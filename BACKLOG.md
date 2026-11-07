@@ -41,6 +41,7 @@ Shipped in 1.1.0: backup and export, off-screen rescue, global hotkey (see CHANG
 | Item | Reason |
 |---|---|
 | Reminders, formatting, tags, checklists | Pushes the app toward Notion. Minimal is the point. |
+| Rich text (bold/italic/lists) with a bottom toolbar | Asked 7 Nov 2026, held off after pushback. Would force a storage-format change (plain text -> HTML/Markdown), a rewrite of the note editor (textarea -> contenteditable), and a rethink of .txt export. Revisit only with a clear answer to: what specifically needs emphasis, and is a one-way conversion of existing notes acceptable. |
 
 ## Bugs
 - None reported.
