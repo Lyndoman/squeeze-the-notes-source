@@ -158,10 +158,46 @@ function createNote(color) {
   return note;
 }
 
+// ---------- off-screen rescue ----------
+// A note counts as visible if enough of its top bar (the drag handle) is on some screen.
+function isReachable(b) {
+  return screen.getAllDisplays().some(d => {
+    const a = d.workArea;
+    const ix = Math.min(b.x + b.width, a.x + a.width) - Math.max(b.x, a.x);
+    const iy = Math.min(b.y + 26, a.y + a.height) - Math.max(b.y, a.y);
+    return ix >= 60 && iy >= 20;
+  });
+}
+
+function rescuedBounds(b, slot) {
+  if (isReachable(b)) return null;
+  const a = screen.getPrimaryDisplay().workArea;
+  const w = Math.min(b.width, a.width), h = Math.min(b.height, a.height);
+  const off = (slot % 8) * 28;
+  return { x: a.x + a.width - w - 40 - off, y: a.y + 60 + off, width: w, height: h };
+}
+
+function rescueNote(note, slot) {
+  const nb = rescuedBounds({ x: note.x, y: note.y, width: note.w, height: note.h }, slot);
+  if (!nb) return false;
+  Object.assign(note, { x: nb.x, y: nb.y, w: nb.width, h: nb.height });
+  const win = noteWins.get(note.id);
+  if (win && !win.isDestroyed()) win.setBounds(nb);
+  return true;
+}
+
+let rescueSlot = 0;
+function rescueAll() {
+  let moved = 0;
+  db.notes.forEach(n => { if (rescueNote(n, moved)) moved++; });
+  if (moved) { save(); notifyCentre(); }
+}
+
 function openNote(id, focus) {
   const note = findNote(id);
   if (!note) return;
   note.open = true;
+  if (rescueNote(note, rescueSlot)) rescueSlot++;
   save();
 
   let win = noteWins.get(id);
@@ -342,6 +378,13 @@ app.whenReady().then(() => {
   buildTray();
 
   db.notes.filter(n => n.open).forEach(n => openNote(n.id, false));
+  rescueSlot = 0;
+
+  // Monitor unplugged, resolution or scaling changed: pull notes back into view.
+  let rescueTimer = null;
+  const scheduleRescue = () => { clearTimeout(rescueTimer); rescueTimer = setTimeout(rescueAll, 500); };
+  screen.on('display-removed', scheduleRescue);
+  screen.on('display-metrics-changed', scheduleRescue);
 
   if (!isStartup) {
     openCentre();
