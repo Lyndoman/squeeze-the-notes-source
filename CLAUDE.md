@@ -7,7 +7,7 @@ A minimal sticky-note app for the Windows desktop. Owner: Lyndon Antcliff (novic
 Electron app, NSIS installer, Windows only. Shared with others as an unsigned installer.
 
 ## Current state
-- Version: 1.1.0 (see CHANGELOG.md). 1.1.0 tested on Lyndon's Windows PC (7 Nov 2026): all checks passed.
+- Version: 1.2.0 (see CHANGELOG.md). 1.1.0 passed all checks on Lyndon's Windows PC (7 Nov 2026); 1.2.0 not yet tested on Windows.
 - Installers: ../Squeeze-the-Notes-Setup/ (keep old versions there; zip for sharing)
 - User data: %APPDATA%\Squeeze the Notes\notes.json, daily backups in backups\ (last 14)
 - Pushing to GitHub: Lyndon pushes with GitHub Desktop (repo Lyndoman/squeeze-the-notes-source, private). The shell on his PC has no GitHub login, so commit there and ask him to click Push.
@@ -46,4 +46,4 @@ Copy the finished installer to ../Squeeze-the-Notes-Setup/ and zip it before sha
 
 ## GitHub
 GitHub Desktop was used once and went wrong: "Add local repository" created a brand new empty repo in a wrongly-named subfolder instead of publishing this one, and removing it from Desktop's list then deleted this entire folder from disk (the "also move to trash" option, not "just remove from list"). Be careful with GitHub Desktop's Remove dialog: it has both options, and the destructive one is easy to pick by accident.
-Now connected: published correctly on 7 Nov 2026 as Lyndoman/squeeze-the-notes-source (private).
+Connected: Lyndoman/squeeze-the-notes-source, public since 7 Nov 2026. If this folder ever goes missing, clone it back from GitHub (no login needed) and reapply anything not yet pushed. Keep installer downloads out of the source folder and do not point GitHub Desktop at installer folders.

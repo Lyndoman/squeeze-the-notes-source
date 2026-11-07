@@ -1,5 +1,6 @@
 const id = new URLSearchParams(location.search).get('id');
 const ta = document.getElementById('text');
+const titleEl = document.getElementById('title');
 const pinBtn = document.getElementById('pinBtn');
 const colorBtn = document.getElementById('colorBtn');
 const swatches = document.getElementById('swatches');
@@ -29,6 +30,8 @@ window.stn.getNote(id).then(({ note, colors }) => {
   if (!note) return;
   current = note.color;
   ta.value = note.text;
+  titleEl.value = note.title || '';
+  titleEl.title = titleEl.value;
   paint(colors[note.color]);
   setTop(note.onTop);
   buildSwatches(colors);
@@ -41,7 +44,24 @@ ta.addEventListener('input', () => {
   clearTimeout(t);
   t = setTimeout(() => window.stn.setText(id, ta.value), 250);
 });
-window.addEventListener('beforeunload', () => window.stn.setText(id, ta.value));
+window.addEventListener('beforeunload', () => {
+  window.stn.setText(id, ta.value);
+  window.stn.setTitle(id, titleEl.value);
+});
+
+let tt = null;
+titleEl.addEventListener('input', () => {
+  titleEl.title = titleEl.value;
+  clearTimeout(tt);
+  tt = setTimeout(() => window.stn.setTitle(id, titleEl.value), 250);
+});
+titleEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === 'Escape') {
+    e.preventDefault();
+    window.stn.setTitle(id, titleEl.value);
+    ta.focus();
+  }
+});
 
 colorBtn.onclick = () => swatches.classList.toggle('on');
 pinBtn.onclick = () => window.stn.toggleTop(id);

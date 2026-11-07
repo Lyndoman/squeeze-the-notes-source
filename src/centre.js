@@ -80,7 +80,7 @@ function render({ settings, notes, colors, notice, hotkeys }) {
     txt.className = 'txt';
     txt.title = 'Bring to front';
     const b = document.createElement('b');
-    const first = n.text.split('\n').find(l => l.trim());
+    const first = (n.title || '').trim() || (n.text || '').split('\n').find(l => l.trim());
     if (first) b.textContent = first.trim(); else { b.textContent = 'Empty note'; b.className = 'empty'; }
     const sm = document.createElement('small');
     sm.textContent = (n.open ? 'On screen' : 'Hidden') + ' · ' + ago(n.updated);

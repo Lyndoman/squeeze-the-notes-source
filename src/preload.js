@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('stn', {
   state: () => ipcRenderer.invoke('state'),
   getNote: id => ipcRenderer.invoke('note:get', id),
   setText: (id, text) => ipcRenderer.send('note:text', id, text),
+  setTitle: (id, title) => ipcRenderer.send('note:title', id, title),
   setColor: (id, color) => ipcRenderer.send('note:color', id, color),
   toggleTop: id => ipcRenderer.send('note:toggleTop', id),
   hide: id => ipcRenderer.send('note:hide', id),

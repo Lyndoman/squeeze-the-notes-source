@@ -6,6 +6,16 @@ Format: version, date, then Added / Changed / Fixed / Removed.
 ## [Unreleased]
 - Nothing yet.
 
+## [1.2.0] - 2026-11-07
+### Added
+- Note titles: an editable title in each note's top bar. Click it to type; Enter or Esc jumps to the note body. Hover shows the full title if it is cut short.
+- The control centre lists a note by its title, or by its first line if it has no title (older notes keep working unchanged).
+- Export includes titles.
+
+### Tested
+- Linux, headless: typing a title saves it; Enter moves to the body; notes saved before 1.2.0 (no title field) load and list correctly; long titles truncate; earlier backup, recovery and export tests still pass.
+- Not tested: Windows.
+
 ## [1.1.0] - 2026-11-07
 ### Added
 - Daily backups: one snapshot per day in `%APPDATA%\Squeeze the Notes\backups`, last 14 kept. "Backups" button in the control centre and tray opens the folder.

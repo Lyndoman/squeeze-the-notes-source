@@ -96,7 +96,7 @@ async function exportTxt() {
   const nl = process.platform === 'win32' ? '\r\n' : '\n';
   const body = [...db.notes]
     .sort((a, b) => a.created - b.created)
-    .map(n => `--- ${n.color}, last edited ${new Date(n.updated).toLocaleString('en-GB')} ---${nl}${(n.text || '').trim() || '(empty)'}`.replace(/\r?\n/g, nl))
+    .map(n => `--- ${n.title ? n.title + ' | ' : ''}${n.color}, last edited ${new Date(n.updated).toLocaleString('en-GB')} ---${nl}${(n.text || '').trim() || '(empty)'}`.replace(/\r?\n/g, nl))
     .join(nl + nl);
   fs.writeFileSync(filePath, body + nl);
   return true;
@@ -160,6 +160,7 @@ function createNote(color) {
   const offset = (db.notes.length % 8) * 28;
   const note = {
     id: crypto.randomUUID(),
+    title: '',
     text: '',
     color: color && COLORS[color] ? color : 'sand',
     x: area.x + area.width - 260 - offset,
@@ -338,6 +339,15 @@ ipcMain.on('note:text', (_e, id, text) => {
   const n = findNote(id);
   if (!n) return;
   n.text = String(text).slice(0, 5000);
+  n.updated = Date.now();
+  save();
+  notifyCentre();
+});
+
+ipcMain.on('note:title', (_e, id, title) => {
+  const n = findNote(id);
+  if (!n) return;
+  n.title = String(title).replace(/[\r\n]+/g, ' ').slice(0, 80);
   n.updated = Date.now();
   save();
   notifyCentre();
