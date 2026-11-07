@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -22,16 +22,89 @@ if (!app.requestSingleInstanceLock()) {
 
 // ---------- storage ----------
 const dataFile = () => path.join(app.getPath('userData'), 'notes.json');
+const backupDir = () => path.join(app.getPath('userData'), 'backups');
+const KEEP_BACKUPS = 14;
+const BACKUP_NAME = /^notes-\d{4}-\d{2}-\d{2}\.json$/;
 let db = { settings: { showOnStartup: true }, notes: [] };
+let notice = '';
+
+const pad = n => String(n).padStart(2, '0');
+function localDate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function readDb(file) {
+  const raw = JSON.parse(fs.readFileSync(file, 'utf8'));
+  if (!raw || typeof raw !== 'object') throw new Error('not an object');
+  return {
+    settings: Object.assign({ showOnStartup: true }, raw.settings || {}),
+    notes: Array.isArray(raw.notes) ? raw.notes : []
+  };
+}
+
+function listBackups() {
+  try { return fs.readdirSync(backupDir()).filter(f => BACKUP_NAME.test(f)).sort(); }
+  catch (_) { return []; }
+}
 
 function load() {
+  if (!fs.existsSync(dataFile())) return; // first run
   try {
-    const raw = JSON.parse(fs.readFileSync(dataFile(), 'utf8'));
-    db = {
-      settings: Object.assign({ showOnStartup: true }, raw.settings || {}),
-      notes: Array.isArray(raw.notes) ? raw.notes : []
-    };
-  } catch (_) { /* first run */ }
+    db = readDb(dataFile());
+    return;
+  } catch (_) { /* unreadable: recover below */ }
+
+  // Keep the broken file for inspection; never save over it.
+  const stamp = `${localDate()}-${Date.now()}`;
+  try { fs.renameSync(dataFile(), dataFile().replace(/\.json$/, `.corrupt-${stamp}.json`)); } catch (_) {}
+
+  for (const f of listBackups().reverse()) {
+    try {
+      db = readDb(path.join(backupDir(), f));
+      notice = `Notes file was damaged. Restored from backup ${f.slice(6, 16)}.`;
+      saveNow();
+      return;
+    } catch (_) { /* try an older one */ }
+  }
+  notice = 'Notes file was damaged and no backup could be read. The damaged file was kept in the data folder.';
+}
+
+// One snapshot per day, taken the first time the app runs that day.
+function backupIfDue() {
+  try {
+    if (!db.notes.length) return;
+    fs.mkdirSync(backupDir(), { recursive: true });
+    const target = path.join(backupDir(), `notes-${localDate()}.json`);
+    if (fs.existsSync(target)) return;
+    fs.writeFileSync(target, JSON.stringify(db, null, 2));
+    const all = listBackups();
+    all.slice(0, Math.max(0, all.length - KEEP_BACKUPS))
+      .forEach(f => fs.unlinkSync(path.join(backupDir(), f)));
+  } catch (e) { console.error('backup failed:', e.message); }
+}
+
+async function exportTxt() {
+  const opts = {
+    title: 'Export notes',
+    defaultPath: path.join(app.getPath('documents'), `Squeeze the Notes ${localDate()}.txt`),
+    filters: [{ name: 'Text', extensions: ['txt'] }]
+  };
+  const parent = centreWin && !centreWin.isDestroyed() ? centreWin : null;
+  const { canceled, filePath } = parent ? await dialog.showSaveDialog(parent, opts) : await dialog.showSaveDialog(opts);
+  if (canceled || !filePath) return false;
+  const nl = process.platform === 'win32' ? '\r\n' : '\n';
+  const body = [...db.notes]
+    .sort((a, b) => a.created - b.created)
+    .map(n => `--- ${n.color}, last edited ${new Date(n.updated).toLocaleString('en-GB')} ---${nl}${(n.text || '').trim() || '(empty)'}`.replace(/\r?\n/g, nl))
+    .join(nl + nl);
+  fs.writeFileSync(filePath, body + nl);
+  return true;
+}
+
+function openBackups() {
+  fs.mkdirSync(backupDir(), { recursive: true });
+  shell.openPath(backupDir());
 }
 
 let saveTimer = null;
@@ -59,7 +132,7 @@ function notifyCentre() {
   if (centreWin && !centreWin.isDestroyed()) centreWin.webContents.send('notes:changed', publicState());
 }
 function publicState() {
-  return { settings: db.settings, notes: db.notes, colors: COLORS };
+  return { settings: db.settings, notes: db.notes, colors: COLORS, notice };
 }
 
 function createNote(color) {
@@ -193,6 +266,9 @@ function buildTray() {
     { label: 'Show all notes', click: () => db.notes.forEach(n => openNote(n.id, false)) },
     { label: 'Hide all notes', click: () => db.notes.forEach(n => hideNote(n.id)) },
     { type: 'separator' },
+    { label: 'Export notes to text...', click: () => exportTxt() },
+    { label: 'Open backups folder', click: () => openBackups() },
+    { type: 'separator' },
     { label: 'Quit', click: () => { quitting = true; app.quit(); } }
   ]));
   tray.on('click', () => openCentre());
@@ -246,6 +322,8 @@ ipcMain.on('note:delete', (_e, id) => deleteNote(id));
 ipcMain.on('notes:showAll', () => db.notes.forEach(n => openNote(n.id, false)));
 ipcMain.on('notes:hideAll', () => db.notes.forEach(n => hideNote(n.id)));
 ipcMain.on('centre:open', () => openCentre());
+ipcMain.handle('notes:export', () => exportTxt());
+ipcMain.on('backups:open', () => openBackups());
 
 ipcMain.on('settings:startup', (_e, on) => {
   db.settings.showOnStartup = !!on;
@@ -258,6 +336,8 @@ ipcMain.on('settings:startup', (_e, on) => {
 app.whenReady().then(() => {
   if (process.platform === 'win32') app.setAppUserModelId('com.squeezethenotes.app');
   load();
+  backupIfDue();
+  setInterval(backupIfDue, 60 * 60 * 1000); // catches PCs left on past midnight
   applyLoginItem();
   buildTray();
 

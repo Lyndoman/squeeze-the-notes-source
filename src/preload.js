@@ -14,6 +14,8 @@ contextBridge.exposeInMainWorld('stn', {
   hideAll: () => ipcRenderer.send('notes:hideAll'),
   openCentre: () => ipcRenderer.send('centre:open'),
   setStartup: on => ipcRenderer.send('settings:startup', on),
+  exportTxt: () => ipcRenderer.invoke('notes:export'),
+  openBackups: () => ipcRenderer.send('backups:open'),
   onChanged: cb => ipcRenderer.on('notes:changed', (_e, s) => cb(s)),
   onColor: cb => ipcRenderer.on('note:color', (_e, name, hex) => cb(name, hex)),
   onTop: cb => ipcRenderer.on('note:onTop', (_e, v) => cb(v))

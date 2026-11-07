@@ -20,8 +20,11 @@ function btn(label, cls, fn) {
   return b;
 }
 
-function render({ settings, notes, colors }) {
+function render({ settings, notes, colors, notice }) {
   startup.checked = !!settings.showOnStartup;
+  const nb = document.getElementById('notice');
+  nb.hidden = !notice;
+  nb.textContent = notice || '';
   const open = notes.filter(n => n.open).length;
   count.textContent = `${notes.length} note${notes.length === 1 ? '' : 's'}, ${open} on screen`;
 
@@ -84,4 +87,12 @@ window.stn.onChanged(render);
 startup.onchange = () => window.stn.setStartup(startup.checked);
 document.getElementById('showAll').onclick = () => window.stn.showAll();
 document.getElementById('hideAll').onclick = () => window.stn.hideAll();
+document.getElementById('backupsBtn').onclick = () => window.stn.openBackups();
+const exportBtn = document.getElementById('exportBtn');
+exportBtn.onclick = async () => {
+  const ok = await window.stn.exportTxt();
+  if (!ok) return;
+  exportBtn.textContent = 'Saved';
+  setTimeout(() => { exportBtn.textContent = 'Export'; }, 2000);
+};
 setInterval(() => window.stn.state().then(render), 60000);
