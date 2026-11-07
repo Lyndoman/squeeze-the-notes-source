@@ -20,8 +20,26 @@ function btn(label, cls, fn) {
   return b;
 }
 
-function render({ settings, notes, colors, notice }) {
+function renderKeys(hotkeys) {
+  const box = document.getElementById('keys');
+  box.innerHTML = '';
+  (hotkeys || []).forEach(h => {
+    const line = document.createElement('div');
+    const k = document.createElement('kbd');
+    k.textContent = h.label;
+    line.append(k, document.createTextNode(' ' + h.what));
+    if (!h.ok) {
+      line.className = 'bad';
+      line.title = 'Another app is already using this shortcut';
+      line.append(document.createTextNode(' (in use)'));
+    }
+    box.appendChild(line);
+  });
+}
+
+function render({ settings, notes, colors, notice, hotkeys }) {
   startup.checked = !!settings.showOnStartup;
+  renderKeys(hotkeys);
   const nb = document.getElementById('notice');
   nb.hidden = !notice;
   nb.textContent = notice || '';

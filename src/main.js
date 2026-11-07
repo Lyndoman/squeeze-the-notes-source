@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, nativeImage, screen, dialog, shell, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -132,7 +132,27 @@ function notifyCentre() {
   if (centreWin && !centreWin.isDestroyed()) centreWin.webContents.send('notes:changed', publicState());
 }
 function publicState() {
-  return { settings: db.settings, notes: db.notes, colors: COLORS, notice };
+  return { settings: db.settings, notes: db.notes, colors: COLORS, notice, hotkeys: hotkeyInfo() };
+}
+
+// ---------- global hotkeys ----------
+const HOTKEYS = [
+  { id: 'new',  accel: 'CommandOrControl+Alt+N', label: 'Ctrl+Alt+N', what: 'new note',  run: () => createNote() },
+  { id: 'show', accel: 'CommandOrControl+Alt+S', label: 'Ctrl+Alt+S', what: 'show all', run: () => showAllToFront() }
+];
+const hotkeyOk = {};
+
+function registerHotkeys() {
+  for (const h of HOTKEYS) {
+    try { hotkeyOk[h.id] = globalShortcut.register(h.accel, h.run); }
+    catch (_) { hotkeyOk[h.id] = false; }
+  }
+}
+function hotkeyInfo() {
+  return HOTKEYS.map(h => ({ label: h.label, what: h.what, ok: !!hotkeyOk[h.id] }));
+}
+function showAllToFront() {
+  db.notes.forEach(n => openNote(n.id, false));
 }
 
 function createNote(color) {
@@ -297,9 +317,9 @@ function buildTray() {
   tray = new Tray(icon);
   tray.setToolTip('Squeeze the Notes');
   tray.setContextMenu(Menu.buildFromTemplate([
-    { label: 'New note', click: () => createNote() },
+    { label: 'New note', accelerator: 'CommandOrControl+Alt+N', click: () => createNote() },
     { label: 'Control centre', click: () => openCentre() },
-    { label: 'Show all notes', click: () => db.notes.forEach(n => openNote(n.id, false)) },
+    { label: 'Show all notes', accelerator: 'CommandOrControl+Alt+S', click: () => showAllToFront() },
     { label: 'Hide all notes', click: () => db.notes.forEach(n => hideNote(n.id)) },
     { type: 'separator' },
     { label: 'Export notes to text...', click: () => exportTxt() },
@@ -376,6 +396,7 @@ app.whenReady().then(() => {
   setInterval(backupIfDue, 60 * 60 * 1000); // catches PCs left on past midnight
   applyLoginItem();
   buildTray();
+  registerHotkeys();
 
   db.notes.filter(n => n.open).forEach(n => openNote(n.id, false));
   rescueSlot = 0;
@@ -395,3 +416,4 @@ app.whenReady().then(() => {
 // Keep running in the tray when every window is closed.
 app.on('window-all-closed', () => { /* stay alive in tray */ });
 app.on('before-quit', () => { quitting = true; saveNow(); });
+app.on('will-quit', () => globalShortcut.unregisterAll());

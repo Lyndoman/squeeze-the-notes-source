@@ -43,6 +43,9 @@
   footer { border-top: 1px solid var(--line); padding: 12px 18px; display: flex; align-items: center; gap: 8px; }
   footer label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
   input[type=checkbox] { accent-color: #6E7F68; width: 14px; height: 14px; }
+  .keys { margin-left: auto; color: var(--soft); font-size: 11px; text-align: right; line-height: 1.5; }
+  .keys kbd { font: inherit; color: var(--ink); }
+  .keys .bad { color: #9A4B42; }
 </style>
 </head>
 <body>
@@ -62,6 +65,7 @@
   <ul id="list"></ul>
   <footer>
     <label><input type="checkbox" id="startup"> Show notes when PC starts</label>
+    <span class="keys" id="keys"></span>
   </footer>
 <script src="centre.js"></script>
 </body>
