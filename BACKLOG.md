@@ -3,12 +3,13 @@
 Work not yet done, in priority order. Move items to CHANGELOG.md when shipped.
 Status: Next / Later / Maybe / Rejected
 
-## Next (v1.1.0)
+## Next
 | # | Item | Why | Effort | Status |
 |---|---|---|---|---|
-| 1 | Backup and export | All notes live in one file. Daily automatic backups plus "Export to .txt". | Low | Next |
-| 2 | Off-screen rescue | Notes reopen invisible after a monitor or resolution change. Clamp them onto a visible screen at startup. | Low | Next |
-| 3 | Global hotkey | New note / show all from anywhere (e.g. Ctrl+Alt+N). | Low | Next |
+| - | Owner tests v1.1.0 on Windows | See checks below | - | To do |
+| 11 | Restore from backup button | Restoring is manual today: quit the app, copy a file from backups over notes.json. Fine for the owner, hard for anyone it is shared with. | Low | Later, if needed |
+
+Shipped in 1.1.0: backup and export, off-screen rescue, global hotkey (see CHANGELOG.md).
 
 ## Checks to do on Windows (owner)
 | Check | How | Status |
@@ -16,6 +17,10 @@ Status: Next / Later / Maybe / Rejected
 | Restart | Reboot; do notes come back? | To do |
 | Survives quitting | Write a note, Quit from tray, reopen | To do |
 | Send behind | Arrow button, then click another window | To do |
+| Upgrade | Install 1.1.0 over 1.0.0; are existing notes still there? | To do |
+| Hotkeys | Ctrl+Alt+N and Ctrl+Alt+S from another app | To do |
+| Backups | Control centre > Backups; is today's file there? | To do |
+| Export | Control centre > Export; open the .txt | To do |
 
 ## Later (decide after a few weeks of use)
 | # | Item | Why | Effort |

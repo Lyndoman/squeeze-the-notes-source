@@ -1,7 +1,7 @@
 {
   "name": "squeeze-the-notes",
   "productName": "Squeeze the Notes",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Minimal sticky notes for your desktop",
   "author": "Lyndon Antcliff",
   "main": "src/main.js",

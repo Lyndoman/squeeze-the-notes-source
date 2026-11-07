@@ -7,10 +7,11 @@ A minimal sticky-note app for the Windows desktop. Owner: Lyndon Antcliff (novic
 Electron app, NSIS installer, Windows only. Shared with others as an unsigned installer.
 
 ## Current state
-- Version: 1.0.0 (see CHANGELOG.md)
-- Tested on Lyndon's Windows PC: installs and runs.
-- Installer: ../Squeeze-the-Notes-Setup/Squeeze-the-Notes-Setup-1.0.0.exe
-- User data: %APPDATA%\Squeeze the Notes\notes.json (single file, no backup yet)
+- Version: 1.1.0 (see CHANGELOG.md). 1.0.0 tested on Lyndon's Windows PC; 1.1.0 not yet.
+- Installers: ../Squeeze-the-Notes-Setup/ (keep old versions there; zip for sharing)
+- User data: %APPDATA%\Squeeze the Notes\notes.json, daily backups in backups\ (last 14)
+- Pushing to GitHub: Lyndon pushes with GitHub Desktop (repo Lyndoman/squeeze-the-notes-source, private). The shell on his PC has no GitHub login, so commit there and ask him to click Push.
+- Transfers: device_commit_files rejects .exe files. Send the zip and unzip it on the PC.
 
 ## Rules
 1. Minimal is the product. Push back on features that move it toward Notion (reminders, formatting, tags, checklists).
@@ -44,4 +45,4 @@ Copy the finished installer to ../Squeeze-the-Notes-Setup/ and zip it before sha
 
 ## GitHub
 GitHub Desktop was used once and went wrong: "Add local repository" created a brand new empty repo in a wrongly-named subfolder instead of publishing this one, and removing it from Desktop's list then deleted this entire folder from disk (the "also move to trash" option, not "just remove from list"). Be careful with GitHub Desktop's Remove dialog: it has both options, and the destructive one is easy to pick by accident.
-Not yet connected to GitHub. Next attempt: in GitHub Desktop, "Add local repository" pointing at this exact folder, then Publish, with "keep code private" ticked.
+Now connected: published correctly on 7 Nov 2026 as Lyndoman/squeeze-the-notes-source (private).
