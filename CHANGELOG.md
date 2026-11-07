@@ -18,7 +18,8 @@ Format: version, date, then Added / Changed / Fixed / Removed.
 
 ### Tested
 - Linux, headless: damaged-file recovery (skips a broken backup), backup pruning, export, off-screen rescue, Ctrl+Alt+N via a real key press.
-- Not tested: anything on Windows; live monitor unplugging (display-change events).
+- Windows (Lyndon's PC, 7 Nov 2026): upgrade from 1.0.0 kept notes; Ctrl+Alt+N and Ctrl+Alt+S work from other apps; Backups folder has today's file; Export saves a readable .txt; no shortcut conflicts.
+- Not tested: live monitor unplugging (display-change events).
 
 ## [1.0.0] - 2026-11-06
 ### Added
